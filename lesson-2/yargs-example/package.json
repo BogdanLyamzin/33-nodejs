@@ -1,0 +1,19 @@
+{
+  "name": "yargs-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  },
+  "dependencies": {
+    "uuid": "^8.3.2",
+    "yargs": "^17.1.1"
+  }
+}
