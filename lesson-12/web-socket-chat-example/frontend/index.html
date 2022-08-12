@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div>
+        <form action="" id="user-name-form">
+            <label for="">Представьтесь чату</label>
+            <input type="text" name="userName" placeholder="Ваше имя" required />
+        </form>
+    </div>
+    <div id="chat" class="chat">
+         <!-- <p>
+             <span class="name">Богдан:</span>
+             <span class="you-chat-message">Всем привет!</span>
+            </p>
+        <p>
+            <span class="name">Аня:</span>
+            <span class="user-chat-message">Привет-привет!</span>
+        </p>   -->
+    </div>
+
+    <div id="chat-message">
+        <form action="" id="chat-form">
+            <div class="form-group">
+                <textarea name="message" id="" cols="30" rows="3" placeholder="Новое сообщение" required></textarea>
+            </div>
+            <button type="submit">Отправить</button>
+        </form>
+    </div>
+    <!-- 
+1. При отправке формы сообщение появляется в чате как наше сообщение
+2. Это сообщение отсылается на бекенд, веб-сокет серверу.
+3. При получении с бекенда сообщения от веб-сокет сервера выводить
+его в ча как p с классом "user-chat-message".
+ -->
+    <script>
+        const chat = document.getElementById("chat");
+        let userName = "";
+
+        const ws = new WebSocket("ws://localhost:5000");
+
+        ws.onmessage = ({data}) => {
+            const {name, message} = JSON.parse(data);
+            chat.insertAdjacentHTML("beforeend", `
+            <p>
+             <span class="name">${name}:</span>
+             <span class="user-chat-message">${message}</span>
+            </p>`);
+        }
+
+        const userNameForm = document.getElementById("user-name-form");
+        userNameForm.addEventListener("submit", function(e){
+            e.preventDefault();
+            userName = this.elements.userName.value;
+            this.remove();
+        });
+
+        const chatForm = document.getElementById("chat-form");
+        chatForm.addEventListener("submit", function(e){
+            e.preventDefault();
+            const message = this.elements.message.value;
+            chat.insertAdjacentHTML("beforeend", `
+            <p>
+             <span class="name">${userName}:</span>
+             <span class="you-chat-message">${message}</span>
+            </p>`);
+            const data = {
+                name: userName,
+                message
+            };
+            ws.send(JSON.stringify(data));
+            this.reset();
+        })
+
+    </script>
+</body>
+
+</html>
